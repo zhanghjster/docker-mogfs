@@ -1,0 +1,75 @@
+version: '2'
+services:
+  mogilefs_mysql:
+    image: 'mysql'
+    container_name: mogilefs_mysql
+    volumes:
+      - mogilefs_mysqldata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    networks:
+      mogilefs:
+        aliases:
+          - mysqlhost
+  store1:
+    image: mogilefs
+    container_name: store1
+    volumes:
+      - mogilefs_storedata1:/mogdata/
+      - ./etc/mogilefs/:/etc/mogilefs/
+    networks: 
+      mogilefs:
+        aliases:
+          - store1
+  store2:
+    image: mogilefs
+    container_name: store2
+    volumes:
+      - mogilefs_storedata2:/mogdata/
+      - ./etc/mogilefs/:/etc/mogilefs/
+    networks: 
+      mogilefs:
+        aliases:
+          - store2
+  store3:
+    image: mogilefs
+    container_name: store3
+    volumes:
+      - mogilefs_storedata3:/mogdata/
+      - ./etc/mogilefs/:/etc/mogilefs/
+    networks: 
+      mogilefs:
+        aliases:
+          - store3
+  tracker1:
+    image: mogilefs
+    container_name: tracker1
+    volumes:
+      - ./etc/mogilefs/:/etc/mogilefs/
+    networks: 
+      mogilefs:
+        aliases:
+          - tracker1
+  tracker2:
+    image: mogilefs
+    container_name: tracker2
+    volumes:
+      - ./etc/mogilefs/:/etc/mogilefs/
+    networks: 
+      mogilefs:
+        aliases:
+          - tracker2
+networks:
+  mogilefs:
+    driver: bridge
+volumes:
+  mogilefs_mysqldata:
+    external: true
+  mogilefs_storedata1:
+    external: true
+  mogilefs_storedata2:
+    external: true
+  mogilefs_storedata3:
+    external: true
