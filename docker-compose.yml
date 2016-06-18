@@ -9,6 +9,9 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=mogilefs
+      - MYSQL_USER=mogile
+      - MYSQL_PASSWORD=123456
     networks:
       mogilefs:
         aliases:
@@ -16,6 +19,7 @@ services:
   store1:
     image: mogilefs
     container_name: store1
+    command: "mogstored"
     volumes:
       - mogilefs_storedata1:/mogdata/
       - ./etc/mogilefs/:/etc/mogilefs/
@@ -26,6 +30,7 @@ services:
   store2:
     image: mogilefs
     container_name: store2
+    command: "mogstored"
     volumes:
       - mogilefs_storedata2:/mogdata/
       - ./etc/mogilefs/:/etc/mogilefs/
@@ -36,6 +41,7 @@ services:
   store3:
     image: mogilefs
     container_name: store3
+    command: "mogstored"
     volumes:
       - mogilefs_storedata3:/mogdata/
       - ./etc/mogilefs/:/etc/mogilefs/
@@ -46,6 +52,12 @@ services:
   tracker1:
     image: mogilefs
     container_name: tracker1
+    depends_on: 
+      - mogilefs_mysql
+    environment:
+      - TRACKER=1
+    user: mogile 
+    command: 'mogilefsd'
     volumes:
       - ./etc/mogilefs/:/etc/mogilefs/
     networks: 
@@ -55,6 +67,12 @@ services:
   tracker2:
     image: mogilefs
     container_name: tracker2
+    environment:
+      - TRACKER=1
+    depends_on: 
+      - mogilefs_mysql
+    user: mogile 
+    command: 'mogilefsd'
     volumes:
       - ./etc/mogilefs/:/etc/mogilefs/
     networks: 
@@ -66,10 +84,6 @@ networks:
     driver: bridge
 volumes:
   mogilefs_mysqldata:
-    external: true
   mogilefs_storedata1:
-    external: true
   mogilefs_storedata2:
-    external: true
   mogilefs_storedata3:
-    external: true
