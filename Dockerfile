@@ -36,8 +36,6 @@ RUN yum -y install mysql
 
 RUN yum -y install nmap
 
-ENV TERM=dumb
-
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh 
 ENTRYPOINT ["/entrypoint.sh"]
